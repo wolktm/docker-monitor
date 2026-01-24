@@ -88,8 +88,9 @@ sudo netstat -tlnp | grep 9443
 ### Remove Portainer
 ```bash
 docker stack rm portainer
-sudo iptables -D DOCKER-USER -p tcp --dport 9443 -j DROP
+# Remove iptables rules (order matters - remove DROP then ACCEPT)
 sudo iptables -D DOCKER-USER -i lo -p tcp --dport 9443 -j ACCEPT
+sudo iptables -D DOCKER-USER -p tcp --dport 9443 -j DROP
 ```
 
 ## Useful Portainer Features

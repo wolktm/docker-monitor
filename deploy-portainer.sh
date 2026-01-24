@@ -26,13 +26,14 @@ sleep 30
 echo ""
 echo "4. Setting up iptables rules for localhost-only access..."
 
-# Remove existing rules for port 9443 if they exist
-sudo iptables -D DOCKER-USER -p tcp --dport 9443 -j DROP 2>/dev/null || true
+# Remove existing rules for port 9443 if they exist (order matters)
 sudo iptables -D DOCKER-USER -i lo -p tcp --dport 9443 -j ACCEPT 2>/dev/null || true
+sudo iptables -D DOCKER-USER -p tcp --dport 9443 -j DROP 2>/dev/null || true
 
-# Add new rules
-sudo iptables -I DOCKER-USER -i lo -p tcp --dport 9443 -j ACCEPT
-sudo iptables -I DOCKER-USER -p tcp --dport 9443 -j DROP
+# Add new rules with explicit positions (ACCEPT at pos 1, DROP at pos 2)
+# This ensures localhost is allowed before everything else is dropped
+sudo iptables -I DOCKER-USER 1 -i lo -p tcp --dport 9443 -j ACCEPT
+sudo iptables -I DOCKER-USER 2 -p tcp --dport 9443 -j DROP
 
 # Show the rules
 echo ""

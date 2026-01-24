@@ -56,14 +56,6 @@ services:
           memory: 128M
       restart_policy:
         condition: on-failure
-      labels:
-        - "portainer.enabled=true"
-    healthcheck:
-      test: ["CMD", "/usr/bin/check-portainer-health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
 
 networks:
   portainer_network:
