@@ -62,8 +62,30 @@ echo "8. Recent logs:"
 docker service logs portainer_portainer --tail 10
 
 echo ""
+echo "9. Setting up iptables rules for port 9000..."
+# Remove old rules for both 9000 and 9443
+sudo iptables -D DOCKER-USER -i lo -p tcp --dport 9000 -j ACCEPT 2>/dev/null || true
+sudo iptables -D DOCKER-USER -p tcp --dport 9000 -j DROP 2>/dev/null || true
+sudo iptables -D DOCKER-USER -i lo -p tcp --dport 9443 -j ACCEPT 2>/dev/null || true
+sudo iptables -D DOCKER-USER -p tcp --dport 9443 -j DROP 2>/dev/null || true
+
+# Add new rules for port 9000
+sudo iptables -I DOCKER-USER 1 -i lo -p tcp --dport 9000 -j ACCEPT
+sudo iptables -I DOCKER-USER 2 -p tcp --dport 9000 -j DROP
+
+echo ""
+echo "Current DOCKER-USER iptables rules for port 9000:"
+sudo iptables -L DOCKER-USER -n -v | grep 9000
+
+echo ""
 echo "=== FIX COMPLETE ==="
 echo ""
-echo "Check if Portainer is running on the correct port:"
+echo "Portainer should now be running on port 9000 (HTTP)"
+echo ""
+echo "To access via SSH tunnel:"
+echo "  ssh -L 9000:127.0.0.1:9000 user@your-vps-ip"
+echo "  Then open: http://localhost:9000"
+echo ""
+echo "Verify with:"
 echo "  docker ps | grep portainer"
-echo "  netstat -tlnp | grep docker-proxy"
+echo "  curl -I http://localhost:9000"
