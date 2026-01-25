@@ -1,4 +1,4 @@
-.PHONY: help deploy-portainer remove-portainer logs-portainer setup-firewall cleanup-firewall
+.PHONY: help deploy remove logs setup-firewall cleanup-firewall
 
 # Default target
 help:
@@ -6,20 +6,20 @@ help:
 	@echo "======================="
 	@echo ""
 	@echo "Deployment:"
-	@echo "  make deploy-portainer    - Deploy Portainer stack"
+	@echo "  make deploy    - Deploy Portainer stack"
 	@echo ""
 	@echo "Removal:"
-	@echo "  make remove-portainer    - Remove Portainer stack"
+	@echo "  make remove    - Remove Portainer stack"
 	@echo ""
 	@echo "Monitoring:"
-	@echo "  make logs-portainer      - Show Portainer logs"
+	@echo "  make logs      - Show Portainer logs"
 	@echo ""
 	@echo "Firewall:"
 	@echo "  make setup-firewall      - Setup iptables for localhost-only access"
 	@echo "  make cleanup-firewall    - Remove all iptables rules"
 
 # Deployment targets
-deploy-portainer:
+deploy:
 	@echo "Deploying Portainer..."
 	@mkdir -p /opt/data/portainer 2>/dev/null || sudo mkdir -p /opt/data/portainer
 	docker stack deploy -c docker-stack.portainer.yml portainer
@@ -29,14 +29,14 @@ deploy-portainer:
 
 
 # Removal targets
-remove-portainer:
+remove:
 	@echo "Removing Portainer stack..."
 	docker stack rm portainer
 	@echo "Waiting for shutdown..."
 	@sleep 10
 
 # Monitoring targets
-logs-portainer:
+logs:
 	@docker service logs portainer_portainer --tail 50 --follow
 
 # Firewall targets
