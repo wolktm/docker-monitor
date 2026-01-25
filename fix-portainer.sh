@@ -9,7 +9,7 @@ echo ""
 # Step 1: Remove the stack
 echo "1. Removing existing Portainer stack..."
 docker stack rm portainer
-
+docker stack rm docker-monitor
 # Step 2: Wait for complete shutdown
 echo ""
 echo "2. Waiting for all containers to stop (30 seconds)..."
