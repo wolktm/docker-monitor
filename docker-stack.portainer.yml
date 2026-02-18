@@ -56,7 +56,32 @@ services:
           memory: 128M
       restart_policy:
         condition: on-failure
-
+  # Log monitoring with Dozzle
+  dozzle:
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "127.0.0.1:8888:8080"  # Only localhost access (for SSH tunnel)
+    environment:
+      DOZZLE_LEVEL: info
+      DOZZLE_TAILSIZE: 300
+      DOZZLE_FILTER: "name=legaltech_"
+      DOZZLE_NO_ANALYTICS: "true"
+    networks:
+      - legaltech_network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+      restart_policy:
+        condition: on-failure 
 networks:
   portainer_network:
     driver: overlay
