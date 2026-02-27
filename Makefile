@@ -20,24 +20,13 @@ help:
 
 # Deployment targets
 deploy:
-	@echo "Deploying Portainer..."
-	@mkdir -p /opt/data/portainer 2>/dev/null || sudo mkdir -p /opt/data/portainer
-	docker stack deploy -c docker-stack.portainer.yml portainer
-	@echo "Waiting 10 seconds for service to start..."
-	@sleep 10
-	@docker service ps portainer_portainer
+	docker stack deploy -c docker-stack.infra.yml infra
 
 
 # Removal targets
 remove:
-	@echo "Removing Portainer stack..."
-	docker stack rm portainer
-	@echo "Waiting for shutdown..."
-	@sleep 10
+	docker stack rm infra
 
-# Monitoring targets
-logs:
-	@docker service logs portainer_portainer --tail 50 --follow
 
 # Firewall targets
 setup-firewall:

@@ -66,10 +66,10 @@ services:
     environment:
       DOZZLE_LEVEL: info
       DOZZLE_TAILSIZE: 300
-      DOZZLE_FILTER: "name=legaltech_"
+      # DOZZLE_FILTER: "name=legaltech_"
       DOZZLE_NO_ANALYTICS: "true"
     networks:
-      - legaltech_network
+      - portainer_network
     deploy:
       replicas: 1
       placement:
